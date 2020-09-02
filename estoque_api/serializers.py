@@ -12,21 +12,26 @@ class ProdutoSerializer(serializers.ModelSerializer):
 
 
 class ItemVendaSerializer(serializers.ModelSerializer):
-    # produto = ProdutoSerializer()
+    produto = ProdutoSerializer()
     venda = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = ItemVenda
         fields = '__all__'
-        depth = 1
+        # depth = 1
 
 
 class VendasSerializer(serializers.ModelSerializer):
     items = ItemVendaSerializer(many=True)
+    total = serializers.SerializerMethodField()
 
     class Meta:
         model = Venda
-        fields = '__all__'
+        fields = ['items', 'total']
+        read_only_fields = ['total']
+
+    def get_total(self, instance):
+        return instance.total
 
 
 class InsertItemVendaSerializer(serializers.Serializer):
@@ -41,7 +46,7 @@ class InsertItemVendaSerializer(serializers.Serializer):
 
 
 class InsertVendasSerializer(serializers.ModelSerializer):
-    items = InsertItemVendaSerializer(many=True)
+    items = InsertItemVendaSerializer(many=True, required=True)
 
     class Meta:
         model = Venda
@@ -50,13 +55,13 @@ class InsertVendasSerializer(serializers.ModelSerializer):
     @staticmethod
     def validate_at_least_one_item(attrs):
         if len(attrs) == 0:
-            raise serializers.ValidationError({"error": "Precisa ter pelo menos um produto na venda."})
+            raise serializers.ValidationError({"field": "items", "error": "Precisa ter pelo menos um item na venda."})
         return attrs
 
     def create(self, validated_data):
         items_data = validated_data.pop('items')
         if self.validate_at_least_one_item(items_data):
-            venda = Venda.objects.create(**validated_data)
+            venda = Venda.objects.create()
             for item_data in items_data:
                 try:
                     ItemVenda.objects.create(**item_data, venda_id=venda.id)
