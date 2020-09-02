@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
-from estoque_models.models import Produto, ItemVenda, Venda
+from estoque_models.models import Produto, ItemVenda, Venda, Pagamento
 
 
 class ItemVendaInline(admin.StackedInline):
@@ -11,11 +10,13 @@ class ItemVendaInline(admin.StackedInline):
 
 class VendaAdmin(admin.ModelAdmin):
     fieldsets = [
-        ('Data da Venda', {'fields': ['data'], 'classes': ['collapse']})
+        ('Detalhes da Venda', {'fields': ['data', 'status'], 'classes': ['collapse']})
     ]
     inlines = [ItemVendaInline]
+    readonly_fields = ['data']
 
 
 admin.site.register(Produto)
 admin.site.register(Venda, VendaAdmin)
+admin.site.register(Pagamento)
 
