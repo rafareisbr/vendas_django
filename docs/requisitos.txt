@@ -1,0 +1,23 @@
+- Como cliente, quero poder comprar os produtos disponíveis na loja
+- Como cliente, quero poder pagar minha compra utilizando várias formas de pagamento diferentes.
+
+CS1 - Pagar compra a vista com Dinheiro
+    Cliente entrega o dinheiro ao Caixa
+    O Caixa verifica se sobrou troco
+        Caso tenha sobrado troco
+            Calcula o troco e entrega ao Cliente
+            Confirma o sucesso da compra
+        Caso não tenha sobrado troco
+            Confirma o sucesso da compra
+
+CS2 - Pagar compra a vista (metade no Dinheiro e Metade no Cartão de Débito)
+    O Cliente diz quanto vai pagar com dinheiro e quanto vai pagar com cartão
+    O Cliente entrega o dinheiro ao Caixa
+    O Caixa verifica se sobrou troco
+        Caso tenha sobrado troco
+            Calcula o troco e entrega ao Cliente
+    O cliente passa o cartao de débito na máquina com sucesso
+    O Caixa confirma o sucesso da compra
+
+
+
