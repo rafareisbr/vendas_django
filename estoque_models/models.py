@@ -51,6 +51,7 @@ class Pagamento(models.Model):
         on_delete=models.CASCADE,
         primary_key=True
     )
+    total_a_pagar = models.DecimalField(max_digits=15, decimal_places=2)
 
     def __str__(self):
         return 'Pagamento da venda: ' + str(self.venda.id)

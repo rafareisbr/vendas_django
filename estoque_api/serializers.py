@@ -38,6 +38,7 @@ class PagamentosSerializer(serializers.ModelSerializer):
         print(total)
 
     def create(self, validated_data):
+
         items_data = validated_data.pop('items')
         if self.validar_valor_total(items_data):
             return items_data
@@ -61,7 +62,7 @@ class VendasSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Venda
-        fields = ['items', 'total', 'pagamento', 'status']
+        fields = ['id', 'items', 'total', 'pagamento', 'status']
         read_only_fields = ['total', 'pagamento', 'status']
 
     def get_total(self, instance):
