@@ -1,0 +1,9 @@
+POST /pagamentos/
+
+body
+    venda_id: 1,
+    items:
+        {
+            opcao: CDEB,
+            valor: 20.0
+        }

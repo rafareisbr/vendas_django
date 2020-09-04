@@ -1,10 +1,12 @@
 from django.db import models
-from estoque_models.choices import \
+
+from .choices import \
     PAGAMENTO_CHOICES, VENDA_STATUS_CHOICES, \
     VENDA_AGUARDANDO_PAGAMENTO, VENDA_PAGAMENTO_CONFIRMADO
+from core.models import TimeStampedModel
 
 
-class Produto(models.Model):
+class Produto(TimeStampedModel):
     nome = models.CharField(max_length=255, unique=True)
     preco = models.DecimalField(max_digits=15, decimal_places=2)
     descricao = models.TextField()
@@ -13,8 +15,7 @@ class Produto(models.Model):
         return self.nome
 
 
-class Venda(models.Model):
-    data = models.DateTimeField(auto_now_add=True,)
+class Venda(TimeStampedModel):
     status = models.CharField(
         max_length=4,
         choices=VENDA_STATUS_CHOICES,
@@ -22,7 +23,7 @@ class Venda(models.Model):
     )
 
     def __str__(self):
-        return str(self.data.strftime('%m/%d/%Y às %H:%M:%S'))
+        return str(self.created.strftime('%m/%d/%Y às %H:%M:%S'))
 
     @property
     def total(self):
@@ -36,28 +37,27 @@ class Venda(models.Model):
         return self
 
 
-class ItemVenda(models.Model):
+class ItemVenda(TimeStampedModel):
     quantidade = models.PositiveIntegerField(default=0,)
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='vendas', )
     venda = models.ForeignKey(Venda, on_delete=models.CASCADE, related_name='items')
 
     def __str__(self):
-        return 'Venda em' + str(self.venda.data)
+        return 'Venda em' + str(self.venda.created)
 
 
-class Pagamento(models.Model):
+class Pagamento(TimeStampedModel):
     venda = models.OneToOneField(
         to=Venda,
         on_delete=models.CASCADE,
         primary_key=True
     )
-    total_a_pagar = models.DecimalField(max_digits=15, decimal_places=2)
 
     def __str__(self):
         return 'Pagamento da venda: ' + str(self.venda.id)
 
 
-class ItemPagamento(models.Model):
+class ItemPagamento(TimeStampedModel):
     opcao = models.CharField(max_length=4, choices=PAGAMENTO_CHOICES,)
     valor = models.DecimalField(max_digits=15, decimal_places=2)
     pagamento = models.ForeignKey(to=Pagamento, on_delete=models.CASCADE, related_name="items")

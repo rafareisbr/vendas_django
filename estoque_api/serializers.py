@@ -1,7 +1,7 @@
 from django.db import IntegrityError
 from rest_framework import serializers
 
-from estoque_models.models import Produto, Venda, ItemVenda, Pagamento
+from estoque_models.models import Produto, Venda, ItemVenda, Pagamento, ItemPagamento
 
 
 class ProdutoSerializer(serializers.ModelSerializer):
@@ -106,3 +106,21 @@ class InsertVendasSerializer(serializers.ModelSerializer):
                 except IntegrityError:
                     raise serializers.ValidationError({"mensagem": "Algum dos ids enviados não existe na base de dados."})
             return venda
+
+
+class InsertItemPagamentoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ItemPagamento
+        fields = '__all__'
+
+
+class InsertPagamentoSerializer(serializers.ModelSerializer):
+    items = InsertItemPagamentoSerializer(many=True, required=True)
+
+    class Meta:
+        model = Pagamento
+        fields = '__all__'
+
+    def create(self, validated_data):
+        print(validated_data)

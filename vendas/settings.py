@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'estoque_models',
     'estoque_api',
+    'core'
 ]
 
 MIDDLEWARE = [
